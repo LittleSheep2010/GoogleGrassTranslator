@@ -9,12 +9,7 @@
   "dependencies": {
     "@iamtraction/google-translate": "iamtraction/google-translate",
     "chalk": "^4.1.1",
-    "china-google-translate-api": "^2.3.2",
     "cli-progress": "^3.9.0",
-    "fs-extra": "^10.0.0",
-    "google-translate-api-china": "^2.3.2",
-    "google-translate-free": "^2.4.5",
-    "progress": "^2.0.3",
     "prompts": "^2.4.1",
     "translate-platforms": "^0.0.7"
   }
