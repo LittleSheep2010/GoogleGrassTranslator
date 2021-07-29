@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - node
+  - 16
+  - 15
+
+cache: npm
+install:
+  - npm install
