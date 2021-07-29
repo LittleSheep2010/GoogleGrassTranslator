@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 const { google } = require("translate-platforms");
 const prompts = require("prompts");
 const chalk = require("chalk");
@@ -26,27 +28,25 @@ async function configure() {
         message: "Please enter translate chain, use \"->\" split(first language is file origin language)"
     })
 
-    chain = chain.chain.split("->");
-
-    if(chain.length === 0) {
+    if(chain.length == null) {
         console.log(chalk.red("✖ ") + chalk.bold(`Please input right words!`));
         process.exit(0);
     }
 
-    else {
-        let chain_display = "";
-        chain.forEach(line => {
-            if(languages.support_list.indexOf(line) === -1) {
-                console.log(chalk.red("✖ ") + chalk.bold(`Cannot found language ${line} in language list!`));
-                process.exit(0);
-            }
+    chain = chain.chain.split("->");
 
-            chain_display += line + ", ";
-        })
+    let chain_display = "";
+    chain.forEach(line => {
+        if(languages.support_list.indexOf(line) === -1) {
+            console.log(chalk.red("✖ ") + chalk.bold(`Cannot found language ${line} in language list!`));
+            process.exit(0);
+        }
 
-        chain_display = chain_display.slice(0, -2);
-        console.log(chalk.cyan("! ") + chalk.bold("Translate chain: ") + chain_display);
-    }
+        chain_display += line + ", ";
+    })
+
+    chain_display = chain_display.slice(0, -2);
+    console.log(chalk.cyan("! ") + chalk.bold("Translate chain: ") + chain_display);
 
     let file = await prompts({
         type: "text",
@@ -115,5 +115,16 @@ async function makeGrass() {
     console.log(chalk.green("✔ ") + "All are set!");
     process.exit(0);
 }
+
+// Exit Listener
+process.on('SIGINT', () => {
+    console.log(chalk.bold.red("! ") + chalk.red("You stop the task, all changes will reset!"));
+    process.exit(0);
+});
+
+// Output some information
+console.log(chalk.cyan("- ") + chalk.bold.grey("Author: LittleSheep_"));
+console.log(chalk.cyan("- ") + chalk.bold.grey("Welcome use GoogleGrassTranslate!"));
+console.log(chalk.cyan("- ") + chalk.bold.grey("You are running GrassTranslator v0.21"));
 
 makeGrass()

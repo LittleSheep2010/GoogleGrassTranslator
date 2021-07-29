@@ -1,15 +1,28 @@
 {
-  "name": "baidu-grass-translator",
-  "version": "0.0.1",
+  "name": "google-grass-translator",
+  "version": "0.21",
   "description": "A funny translator",
   "main": "index.js",
   "author": "LittleSheep_",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LittleSheep2010/GoogleGrassTranslator.git"
+  },
+  "keywords": [
+    "npm",
+    "cli",
+    "translator"
+  ],
+  "bugs": { "url": "https://github.com/LittleSheep2010/GoogleGrassTranslator/issues" },
+  "homepage": "https://github.com/LittleSheep2010/GoogleGrassTranslator#readme",
+  "bin": { "grass-translator": "index.js" },
   "dependencies": {
     "@iamtraction/google-translate": "iamtraction/google-translate",
     "chalk": "^4.1.1",
     "cli-progress": "^3.9.0",
+    "inquirer": "^8.1.2",
     "prompts": "^2.4.1",
     "translate-platforms": "^0.0.7"
   }
