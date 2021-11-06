@@ -1,18 +1,16 @@
 #! /usr/bin/env node
 
-const { google } = require("translate-platforms");
+const translator = require("@vitalets/google-translate-api");
 const prompts = require("prompts");
 const chalk = require("chalk");
 const fs = require("fs");
 const progress = require('cli-progress');
 
-const languages = require("./language.js");
-
 async function configure() {
     let amount = await prompts({
         type: "number",
         name: "amount",
-        message: "What translate amount(execute chain amount) do you need?"
+        message: "What translate amount(execute workflow amount) do you need?"
     });
 
     amount = amount.amount;
@@ -22,36 +20,35 @@ async function configure() {
         process.exit(0);
     }
 
-    let chain = await prompts({
+    let workflow = (await prompts({
         type: "text",
-        name: "chain",
-        message: "Please enter translate chain, use \"->\" split(first language is file origin language)"
-    })
+        name: "workflow",
+        message: "Please enter translate workflow, use \"->\" split(first language is file origin language)",
+        validate: value => value.split("->").length < 2 ? "Please input 2 or more available translate workflow!" : true
+    })).workflow.split("->");
 
-    if(chain.length == null) {
+    if(workflow.length == null) {
         console.log(chalk.red("✖ ") + chalk.bold(`Please input right words!`));
         process.exit(0);
     }
 
-    chain = chain.chain.split("->");
-
-    let chain_display = "";
-    chain.forEach(line => {
-        if(languages.support_list.indexOf(line) === -1) {
-            console.log(chalk.red("✖ ") + chalk.bold(`Cannot found language ${line} in language list!`));
+    let workflow_display = "";
+    workflow.forEach(work => {
+        if(translator.languages[work] == null) {
+            console.log(chalk.red("✖ ") + chalk.bold(`Cannot found language ${work} in language list!`));
             process.exit(0);
         }
 
-        chain_display += line + ", ";
+        workflow_display += work + ", ";
     })
 
-    chain_display = chain_display.slice(0, -2);
-    console.log(chalk.cyan("! ") + chalk.bold("Translate chain: ") + chain_display);
+    workflow_display = workflow_display.slice(0, -2);
+    console.log(chalk.cyan("! ") + chalk.bold("Translate workflow: ") + workflow_display);
 
     let file = await prompts({
         type: "text",
         name: "file",
-        message: "Please drag file in there or enter full path"
+        message: "Please drag file(To copy path) in there or enter full path"
     });
 
     file = file.file;
@@ -65,37 +62,38 @@ async function configure() {
     origin = origin.toString()
     let output = file + ".out"
 
-    return { origin, output, amount, chain }
+    return { origin, output, amount, workflow }
 }
 
 async function makeGrass() {
     const settings = await configure();
 
     let working_progress = new progress.SingleBar({
-        format: 'Translating |' + chalk.green('{bar}') + '| {percentage}% || {value}/{total} Work(s)',
-        barCompleteChar: '\u2588',
-        barIncompleteChar: '\u2591',
+        format: chalk.cyan("! ") + 'Translating [' + chalk.green('{bar}') + '] {percentage}% || {value}/{total} Request(s)',
+        barCompleteChar: '=',
+        barIncompleteChar: '-',
         hideCursor: true
     });
 
-    working_progress.start(settings.amount * settings.chain.length + 1, 0);
+    working_progress.start(settings.amount * settings.workflow.length + 1, 0);
 
     let content = settings.origin;
     for(let i = 0; i < settings.amount; i++) {
-        for(let i = 1; i <= settings.chain.length; i++) {
+        for(let j = 1; j <= settings.workflow.length; j++) {
             try {
-                content = await google(content, {to: settings.chain[i]})
+                content = await translator(content, {to: settings.workflow[j], tld: "cn"})
                 content = content.text;
             }
 
             catch(error) {
-                console.log(chalk.red("✖ ") + chalk.bold(`Translate failed at process work ${i}! Wait 10 seconds continue and restart.` +
+                console.error(error)
+                console.log(chalk.red("✖ ") + chalk.bold(`Translate failed at process work ${i}:${j}! Wait 10 seconds continue and restart.` +
                 `If you want exit, please press Ctrl-C`));
 
                 // Wait 10 seconds
                 new Promise((resolve) => { setTimeout(resolve, 10 * 1000); });
 
-                i--;
+                j--;
                 working_progress.increment(-1);
             }
 
@@ -104,7 +102,7 @@ async function makeGrass() {
     }
 
     // Last translate
-    content = await google(content, {to: settings.chain[0]})
+    content = await translator(content, {to: settings.workflow[0], tld: "cn"})
     content = content.text;
     working_progress.increment();
     working_progress.stop();

@@ -15,11 +15,15 @@
     "cli",
     "translator"
   ],
-  "bugs": { "url": "https://github.com/LittleSheep2010/GoogleGrassTranslator/issues" },
+  "bugs": {
+    "url": "https://github.com/LittleSheep2010/GoogleGrassTranslator/issues"
+  },
   "homepage": "https://github.com/LittleSheep2010/GoogleGrassTranslator#readme",
-  "bin": { "grass-translator": "index.js" },
+  "bin": {
+    "grass-translator": "index.js"
+  },
   "dependencies": {
-    "@iamtraction/google-translate": "iamtraction/google-translate",
+    "@vitalets/google-translate-api": "^7.0.0",
     "chalk": "^4.1.1",
     "cli-progress": "^3.9.0",
     "inquirer": "^8.1.2",
