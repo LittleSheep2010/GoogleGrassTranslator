@@ -4,10 +4,12 @@ const prompts = require("prompts");
 const chalk = require("chalk");
 const fs = require("fs");
 
+const {getConfigure} = require("./Configure");
+
 const languages = new LanguageManager()
     .setType(LanguageManager.ResourceType.Json)
     .setPath("languages")
-    .setLang("en-us")
+    .setLang(getConfigure()["masterLanguage"])
 
 module.exports = async () => {
     const data = await prompts([
@@ -51,7 +53,7 @@ module.exports = async () => {
     return {
         LoopRound: data.LoopRound,
         Workflow: data.Workflow.split("->"),
-        Source: data.Source,
+        Source: fs.readFileSync(data.Source),
         Output: data.Source + ".out"
     }
 }

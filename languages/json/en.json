@@ -4,7 +4,7 @@
       {
         "type": "object",
         "name": "messages",
-        "values": {
+        "value": {
           "Quit": "You stop the task, all changes will reset!"
         }
       },
@@ -16,7 +16,10 @@
             "Author: LittleSheep_",
             "Welcome use GoogleGrassTranslate!",
             "You are running GrassTranslator"
-          ]
+          ],
+          "Update": {
+            "MasterLanguage": "Change your master language! It's the output file language and your interface language! Edit ~/.ggtrc and change it or remove the default flag! Your current master language is "
+          }
         }
       },
       {
