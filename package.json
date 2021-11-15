@@ -8,17 +8,24 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LittleSheep2010/GoogleGrassTranslator.git"
+    "url": "git+https://git.smartsheep.club/LittleSheep/GoogleCraftTranslator.git"
   },
   "keywords": [
     "npm",
     "cli",
     "translator"
   ],
-  "bugs": {
-    "url": "https://github.com/LittleSheep2010/GoogleGrassTranslator/issues"
+  "scripts": {
+    "build": "pkg ."
   },
-  "homepage": "https://github.com/LittleSheep2010/GoogleGrassTranslator#readme",
+  "pkg": {
+    "assets": "./languages",
+    "outputPath": "dists"
+  },
+  "bugs": {
+    "url": "https://git.smartsheep.club/LittleSheep/GoogleCraftTranslator/issues"
+  },
+  "homepage": "https://git.smartsheep.club/LittleSheep/GoogleCraftTranslator",
   "bin": {
     "grass-translator": "index.js"
   },
